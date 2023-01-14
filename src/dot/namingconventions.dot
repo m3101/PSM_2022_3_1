@@ -1,0 +1,58 @@
+graph{
+    rankdir=LR;splines=ortho;constraint=false;
+    x[label="x[n]" shape=rect]
+    y[label="y[n]" shape=rect]
+    z1[label="Z⁻¹" shape=square]
+    i1[shape=circle width=0 penwidth=0 label=""]
+    c1[shape=circle width=0.05 penwidth=4 label=""]
+    a1[shape=circle width=0.05 penwidth=4 label=""]
+    i0[shape=circle width=0 penwidth=0 label="" ]
+    a0[shape=circle width=0.05 penwidth=4 label=""]
+    c0[shape=circle width=0.05 penwidth=4 label=""]
+
+    subgraph{
+        x,a0,i0,c0,y
+    }
+    subgraph{
+        a1,i1,c1
+    }
+    subgraph{p1;p2;p3}
+    subgraph
+    {
+        rank=same
+        a0;a1;p1
+    }
+    subgraph
+    {
+        rank=same
+        c1;c0;p3
+    }
+    subgraph
+    {
+        rank=same
+        z1;i0;i1;p2
+    }
+
+    x:e--a0:w
+    a0:e--i0:w
+
+    i0:e--c0:w[dir=forward label="a[0]"]
+
+    c0--y[dir=forward]
+
+    i0--z1[dir=forward]
+
+    z1:s--i1:n
+    i1:e--c1:s[dir=forward label="a[1]"]
+    c0--c1[dir=back constraint=false]
+    a1:w--i1:e[dir=back label="b[0]"]
+    a0:s--a1:n[dir=back constraint=false]
+
+    p1[label="" shape = none width=0]
+    p2[label="" shape = none width=0]
+    p3[label="" shape = none width=0]
+
+    p1--p2--p3[style=invisible]
+
+    i1--p2[style=dotted constraint=false]
+}

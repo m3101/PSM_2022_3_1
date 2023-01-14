@@ -1,0 +1,22 @@
+digraph{
+    rankdir=LR
+    subgraph cluster_b{
+        label="Display do gráfico"
+        g[label="Gráfico de barras"]
+    }
+
+    param[label="Interface\nde filtro"]
+
+    dsp[label="Host DSP"]
+    pulse[shape=octagon label="Driver PulseAudio"]
+
+    subgraph cluster_a{
+        label="Filtragem e controle"
+        dsp;param
+    }
+
+    pulse:nw->dsp:ne[label="x[n]"]
+    dsp:se->pulse:sw[xlabel="y[n]"]
+    pulse->g[label="y[n]"]
+    param->dsp[label="UNIX socket"]
+}

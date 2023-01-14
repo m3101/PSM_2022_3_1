@@ -1,0 +1,14 @@
+digraph{
+    rankdir=LR
+    e[shape=rect label="Entrada\nx[n]"]
+    f[label="Filtro\nsimplificado"]
+    {
+        rank=same
+        s[shape=rect label="Saída\ny[n]"]
+        b[shape=octagon label="Gráfico de barras"]
+    }
+
+    f->FFT->Bins->b
+
+    e->f->s
+}

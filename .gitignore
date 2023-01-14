@@ -1,0 +1,7 @@
+*.*
+build
+!.gitignore
+!*.tex
+!*.pdf
+!*.dot
+!*.py

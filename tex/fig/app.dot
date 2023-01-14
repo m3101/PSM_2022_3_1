@@ -18,5 +18,5 @@ digraph{
     pulse:nw->dsp:ne[label="x[n]"]
     dsp:se->pulse:sw[xlabel="y[n]"]
     pulse->g[label="y[n]"]
-    param->dsp[label="UNIX socket"]
+    param->dsp[label="UNIX FIFO/Pipe"]
 }

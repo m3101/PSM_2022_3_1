@@ -88,14 +88,14 @@ Para \textbf{todas} as combinações exploradas (todos W entre 1 e 500, todos G 
     \begin{center}
         \begin{tabular}{ |c|c|c| }
         \hline
-         $N_{fft}/N_{naive}$ & \textbf{Multiplicações} & \textbf{Somas} \\ 
+         $N_{naive}/N_{fft}$ & \textbf{Multiplicações} & \textbf{Somas} \\ 
         \hline
         Média & 9.68 & 9.64 \\  
         Máxima & 9.98 & 10 \\
         Mínima & 1.53 & 3.07 \\
         \hline
         \end{tabular}
-        \caption{Razão entre o número de operações da abordagem com FFT e sem ($N_{fft}/N_{naive}$)}
+        \caption{Razão entre o número de operações da abordagem sem FFT e com FFT ($N_{naive}/N_{fft}$)}
     \end{center}
 \end{table}
 
@@ -108,12 +108,12 @@ A aplicação se dividirá em três componentes principais:
     \begin{itemize}
         \item Codificado em Python;
         \item Apresentará a interface de alteração dos filtros para o usuário;
-        \item Proverá os coeficientes do filtro para o processador de sinais via socket UNIX.
+        \item Proverá os coeficientes do filtro para o processador de sinais via FIFO/Pipe UNIX.
     \end{itemize}
     \item Host de filtragem;
     \begin{itemize}
         \item Codificado em C;
-        \item Receberá coeficientes de filtragem via socket UNIX;
+        \item Receberá coeficientes de filtragem via FIFO/Pipe UNIX;
         \item Receberá um feed de som do PulseAudio, aplicará o filtro FIR caracterizado pelos parâmetros guardados e enviará um feed de som de volta ao PulseAudio;
     \end{itemize}
     \item Visualizador de gráfico de barras.

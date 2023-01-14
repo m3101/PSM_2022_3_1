@@ -1,7 +1,10 @@
 *.*
 build
+tmp
 !.gitignore
 !*.tex
 !*.pdf
 !*.dot
 !*.py
+!*.h
+!*.c

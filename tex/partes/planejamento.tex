@@ -32,7 +32,7 @@ Mesmo tendo uma complexidade maior que a FFT, intuitivamente imaginei que para a
 
 \break
 
-Buscando uma comparação mais concreta entre essa proposta e a da figura \ref{fig:arquitetura}, fiz uma análise mais detalhada.
+Buscando uma comparação mais concreta entre essa proposta e a descrita acima, ilustrada na figura \ref{fig:arquitetura}, fiz uma análise mais detalhada.
 
 \begin{figure}[h]
     \centering
@@ -99,6 +99,8 @@ Para \textbf{todas} as combinações exploradas (todos W entre 1 e 500, todos G 
     \end{center}
 \end{table}
 
+Podemos perceber, porém, que mesmo usando $1/10$ dos filtros (por juntá-los em um só), o método com a FFT \textbf{não é 10 vezes mais rápido}, ou seja, para menos filtros (ou um só), talvez a intuição inicial estivesse certa (não explorei essas possibilidades).
+
 \subsection{Arquitetura da aplicação}
 
 A aplicação se dividirá em três componentes principais:
@@ -146,5 +148,3 @@ Destes processos, dois grupos são basicamente independentes:
 \end{itemize}
 
 O isolamento dos dois grupos, bem como o desenho do host de DSP de forma "reativa" (funciona continuamente até que alguma alteração venha da interface, com mínima interrupção) permite que o feed de som seja contínuo, sem falhas provindas de gargalos de processamento, e que o display visual, para o qual continuidade não é tão importante, possa lidar com o feed de som em seu próprio "ritmo".
-
-\break

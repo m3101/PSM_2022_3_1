@@ -7,6 +7,15 @@ from PySide6.QtWidgets import (QApplication, QLabel, QPushButton,
                                QHBoxLayout, QGroupBox, QWidget, QSlider)
 import numpy as np
 
+path=""
+
+def load(f):
+    with open(f"src/numpy/filter{f}.np",'rb') as i_f:
+        return np.load(i_f)
+
+filters = [load(i) for i in range(10)]
+print(filters)
+
 
 class EqualiserWidget(QWidget):
     def __init__(self):
@@ -31,8 +40,8 @@ class EqualiserWidget(QWidget):
                     self.layout = QHBoxLayout(self)
                     slider.setTickPosition(QSlider.TickPosition.TicksLeft)
                     slider.setTickInterval(5)
-                    slider.setMaximum(10)
-                    slider.setMinimum(-10)
+                    slider.setMaximum(50)
+                    slider.setMinimum(-50)
 
                     thislabel = QLabel("0dB", slider)
 
@@ -40,6 +49,12 @@ class EqualiserWidget(QWidget):
                         @Slot()
                         def callback():
                             thislabel.setText(f"{slider.value()}dB")
+                            f = sum([
+                                f*np.exp(slider.value()/20)
+                                for f,slider in zip(filters,parent.sliders)
+                            ])
+                            with open(path,'wb') as o_f:
+                                o_f.write(f.astype(np.float32).tobytes())
                         return callback
 
                     slider.callback = genCallback(slider,thislabel)

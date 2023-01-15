@@ -19,6 +19,8 @@
 #define CHUNK 4096
 #define FSIZE 100
 
+#include <string.h>
+#include <errno.h>
 #include <pulse/pulseaudio.h>
 #include <pulse/simple.h>
 #include "FilterUtils.h"
@@ -37,6 +39,7 @@
 // We don't have to worry about race conditions because
 // we'll use a simple swap technique and one thread exclusively
 // reads whilst the other exclusively writes to the pointer.
+Filter* f = 0;
 float *coefs;
 float *coefs_tmp;
 char* pipe_path;
@@ -55,24 +58,40 @@ void* monitor_socket()
 
     // Pipe
     printf("Opening pipe and awaiting connection...\n");
-    polls[1].fd = mkfifo(pipe_path,__O_DIRECT);
+    mkfifo(pipe_path,0666);
+    polls[1].fd = open(pipe_path,O_RDONLY);
     polls[1].events = POLLIN;
+
+    if(polls[1].fd<0)
+    {
+        printf("Failed to open FIFO at %s: %s\n",pipe_path,strerror(errno));
+        return 0;
+    }
 
     for(;;)
     {
-        poll(polls,1,0);
+        poll(polls,2,0);
         if(polls[0].revents&&POLLIN) break; // SIGINT
         if(polls[1].revents&&POLLIN) //Pipe update
         {
-            read(polls[1].fd,coefs_tmp,sizeof(coefs_tmp));
-            float *swp = coefs;
-            coefs=coefs_tmp;
-            coefs_tmp=swp;
+            if(read(polls[1].fd,coefs_tmp,sizeof(float)*FSIZE)!=0)
+            {
+                float *swp = coefs;
+                coefs=coefs_tmp;
+                coefs_tmp=swp;
+                f->a=coefs;
+            }
+            else
+            {
+                close(polls[1].fd);
+                polls[1].fd=open(pipe_path,O_RDONLY);
+            }
         }
     }
 
     printf("Closing FIFO\n");
     close(polls[1].fd);
+    remove(pipe_path);
 
     return 0;
 }
@@ -89,7 +108,6 @@ int main(int argn, char** argv)
     pa_simple *outs=0;
     pa_simple *ins=0;
     pa_sample_spec ss;
-    Filter* f = 0;
 
     // Filter setup
     coefs=calloc(FSIZE,sizeof(float));

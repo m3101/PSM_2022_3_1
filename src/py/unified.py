@@ -42,8 +42,8 @@ class EqualiserWidget(QWidget):
                     self.layout = QHBoxLayout(self)
                     slider.setTickPosition(QSlider.TickPosition.TicksLeft)
                     slider.setTickInterval(5)
-                    slider.setMaximum(50)
-                    slider.setMinimum(-50)
+                    slider.setMaximum(12)
+                    slider.setMinimum(-12)
 
                     thislabel = QLabel("0dB", slider)
 
@@ -52,7 +52,7 @@ class EqualiserWidget(QWidget):
                         def callback():
                             thislabel.setText(f"{slider.value()}dB")
                             f = sum([
-                                f*np.exp(slider.value()/20)
+                                f*(10**(slider.value()/20))
                                 for f,slider in zip(filters,parent.sliders)
                             ])
                             with open(path,'wb') as o_f:
